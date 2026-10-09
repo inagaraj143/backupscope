@@ -1,12 +1,12 @@
 <?php
-namespace InstaBackup\Jobs\Steps;
+namespace BackupScope\Jobs\Steps;
 
-use InstaBackup\Jobs\Job;
-use InstaBackup\Jobs\StepInterface;
-use InstaBackup\Storage\BackupRepository;
-use InstaBackup\Storage\ExposureTest;
-use InstaBackup\Storage\StorageManager;
-use InstaBackup\Support\UserError;
+use BackupScope\Jobs\Job;
+use BackupScope\Jobs\StepInterface;
+use BackupScope\Storage\BackupRepository;
+use BackupScope\Storage\ExposureTest;
+use BackupScope\Storage\StorageManager;
+use BackupScope\Support\UserError;
 
 defined( 'ABSPATH' ) || exit;
 

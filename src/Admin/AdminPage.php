@@ -1,10 +1,10 @@
 <?php
-namespace InstaBackup\Admin;
+namespace BackupScope\Admin;
 
-use InstaBackup\Jobs\JobManager;
-use InstaBackup\Jobs\Steps\ArchiveStep;
-use InstaBackup\Scanner\Areas;
-use InstaBackup\Support\Capability;
+use BackupScope\Jobs\JobManager;
+use BackupScope\Jobs\Steps\ArchiveStep;
+use BackupScope\Scanner\Areas;
+use BackupScope\Support\Capability;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -65,6 +65,8 @@ final class AdminPage {
 					'threshold'   => ArchiveStep::threshold(),
 					'restoreHelp' => 'https://backupscope.pro/docs/restore',
 					'keepOnUninstall' => defined( 'INSTABACKUP_KEEP_BACKUPS_ON_UNINSTALL' ) && INSTABACKUP_KEEP_BACKUPS_ON_UNINSTALL,
+					// Free plugin only (Admin\Promo): Pro links shown with the restore note.
+					'promo'       => apply_filters( 'instabackup_admin_promo', null ),
 					'i18n'        => $this->strings(),
 				)
 			) . ';',
@@ -77,9 +79,14 @@ final class AdminPage {
 			wp_die( esc_html__( 'You are not allowed to manage backups.', 'backupscope' ) );
 		}
 		echo '<div class="wrap instabackup-wrap">';
-		echo '<h1>' . esc_html__( 'BackupScope', 'backupscope' ) . '</h1>';
+		echo '<div class="bsp-title-row"><h1>' . esc_html__( 'BackupScope', 'backupscope' ) . '</h1>';
+		/** Next to the page title (the free plugin adds its Upgrade and review links here). */
+		do_action( 'instabackup_admin_title_actions', 'backup-header' );
+		echo '</div>';
 		echo '<div id="instabackup-app" aria-live="polite"><p>' . esc_html__( 'Loading…', 'backupscope' ) . '</p></div>';
 		echo '<noscript><div class="notice notice-error"><p>' . esc_html__( 'BackupScope needs JavaScript to run backups.', 'backupscope' ) . '</p></div></noscript>';
+		/** Below the backup screen (the free plugin adds its backup coverage card here). */
+		do_action( 'instabackup_admin_after_app' );
 		echo '</div>';
 	}
 

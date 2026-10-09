@@ -266,7 +266,10 @@
 				areas + '</div>' : '' ) +
 			'<p><button type="button" class="button button-primary button-hero" data-act="scan">' + esc( t.scan ) + '</button></p>' +
 			( state.status.backup ? '<p class="ib-muted">' + esc( t.newBackupNote ) + '</p>' : '' ) +
-			'<p class="ib-muted">' + esc( t.noRestore ) + ' <a href="' + esc( cfg.restoreHelp ) + '" target="_blank" rel="noopener">' + esc( t.restoreLink ) + ' →</a></p>' +
+			'<p class="ib-muted">' + ( cfg.promo ?
+				esc( cfg.promo.restorePro ) + ' <a href="' + esc( cfg.promo.featuresUrl ) + '">' + esc( cfg.promo.seePro ) + ' →</a> · ' :
+				esc( t.noRestore ) + ' ' ) +
+			'<a href="' + esc( cfg.restoreHelp ) + '" target="_blank" rel="noopener">' + esc( t.restoreLink ) + ' →</a></p>' +
 			'</div>';
 	}
 
@@ -569,7 +572,9 @@
 				return '<li><code>' + esc( i.path ) + '</code> <span class="ib-muted">' + esc( t.reasons[ i.reason ] || i.reason ) + '</span></li>';
 			} ).join( '' ) + '</ul>';
 		}
-		return '<div class="ib-card ib-success"><h2>' + head + '</h2>' + list +
+		// Free plugin only: the moment a backup exists is when "how do I get it back?" comes up.
+		var promo = cfg.promo ? '<p class="ib-muted">' + esc( cfg.promo.doneHint ) + ' <a href="' + esc( cfg.promo.featuresUrl ) + '">' + esc( cfg.promo.seePro ) + ' →</a></p>' : '';
+		return '<div class="ib-card ib-success"><h2>' + head + '</h2>' + list + promo +
 			'<p><button type="button" class="button" data-act="dismiss">' + esc( t.done ) + '</button></p></div>' + viewBackupCard();
 	}
 

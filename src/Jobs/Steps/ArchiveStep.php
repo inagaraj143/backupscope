@@ -1,14 +1,14 @@
 <?php
-namespace InstaBackup\Jobs\Steps;
+namespace BackupScope\Jobs\Steps;
 
-use InstaBackup\Archive\CompressionPolicy;
-use InstaBackup\Archive\StreamingZipWriter;
-use InstaBackup\Archive\ZipArchiveWriter;
-use InstaBackup\Jobs\Job;
-use InstaBackup\Jobs\StepInterface;
-use InstaBackup\Manifest\Manifest;
-use InstaBackup\Storage\StorageManager;
-use InstaBackup\Support\SecretFiles;
+use BackupScope\Archive\CompressionPolicy;
+use BackupScope\Archive\StreamingZipWriter;
+use BackupScope\Archive\ZipArchiveWriter;
+use BackupScope\Jobs\Job;
+use BackupScope\Jobs\StepInterface;
+use BackupScope\Manifest\Manifest;
+use BackupScope\Storage\StorageManager;
+use BackupScope\Support\SecretFiles;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -155,7 +155,7 @@ final class ArchiveStep implements StepInterface {
 	private function run_single( Job $job, array &$st ) {
 		$st['single_started'] = time();
 		$job->save(); // Persist before the long request so a timeout is detected next time.
-		( new \InstaBackup\Jobs\Lock() )->lease( $job->id(), self::SINGLE_LEASE, true );
+		( new \BackupScope\Jobs\Lock() )->lease( $job->id(), self::SINGLE_LEASE, true );
 		if ( function_exists( 'set_time_limit' ) ) {
 			@set_time_limit( self::SINGLE_LEASE ); // phpcs:ignore -- may be ignored by the host; then the fallback handles it.
 		}
@@ -172,7 +172,7 @@ final class ArchiveStep implements StepInterface {
 				}
 				$last = microtime( true );
 				file_put_contents( $job->path( 'progress.json' ), wp_json_encode( array( 'fraction' => $fraction, 'bytes_total' => $st['bytes_total'], 'at' => time() ) ) ); // phpcs:ignore
-				( new \InstaBackup\Jobs\Lock() )->heartbeat( $job->id() );
+				( new \BackupScope\Jobs\Lock() )->heartbeat( $job->id() );
 			}
 		);
 		@unlink( $job->path( 'progress.json' ) ); // phpcs:ignore

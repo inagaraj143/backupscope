@@ -4,7 +4,7 @@ Tags: backup, database backup, website backup, full backup, files backup
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,24 +40,41 @@ BackupScope is a free WordPress backup plugin that saves your website files and 
 
 **What BackupScope Free does not do:** one-click restore, scheduled backups, off-site storage or email notifications. You can restore a backup by hand (see the FAQ).
 
-= BackupScope Pro =
+= Why upgrade to BackupScope Pro? =
 
-BackupScope Free is a complete backup tool on its own. When you want backups to look after themselves, [BackupScope Pro](https://backupscope.pro/pricing) adds:
+The free plugin is a complete, unrestricted backup tool: full or custom backups, verified, ready to download. [BackupScope Pro](https://backupscope.pro/pricing) is for when backups should look after themselves, and when you also want to see and control what fills your server:
 
-* **Scheduled backups:** daily, weekly or monthly, at a quiet time you choose.
-* **Restore with a safety net:** restore everything, only files or only the database; the current site is backed up first, so you can always go back.
-* **Off-site copies:** send every backup to S3-compatible storage (Amazon S3, Cloudflare R2, Backblaze B2, Wasabi and more), so a copy survives if your server fails.
-* **Backup history and retention:** keep the backups you need and remove old ones automatically.
-* **Email notifications:** know when a backup fails, a schedule is missed or a backup completes.
-* **Storage Analytics:** see what uses your disk space, with automatic analysis and an alert before your disk or hosting plan fills up.
+* **Scheduled backups:** daily, weekly or monthly at a quiet time you choose, in your site's time zone, as a full backup or your own selection of folders and the database. Backups run in the background and keep going after you close the page. A missed run is noticed and reported, and it can start on the next visit to the site or from a private server cron address when WP-Cron is unreliable.
+* **Restore with a safety net:** restore everything, only the files or only the database, from a backup on the server or off-site. Before anything is overwritten, a safety backup of the current site is made, so you can always go back. The database is imported into separate tables and switched over in one step at the end, so the site keeps working while the restore runs. Your current `wp-config.php` and BackupScope's own settings are kept.
+* **Off-site copies:** send every backup to Amazon S3 or S3-compatible storage such as Cloudflare R2, Backblaze B2, Wasabi, DigitalOcean Spaces or MinIO, so a copy survives if your server fails. Large archives upload in parts, each part is retried, and an interrupted upload resumes. Access keys are stored encrypted (or defined in `wp-config.php`), the connection status shows when it was last tested, and you choose whether to keep the copy on your server.
+* **Backup history and retention:** every backup in one list, with download, lock and delete. Keep the last N backups and/or the backups from the last N days; locked backups and the newest good backup are never removed, and off-site copies follow their own rule.
+* **Email notifications:** an email when a backup fails, a scheduled backup is missed, an off-site copy fails or a backup completes. Every email is an editable template with a live preview and a test button, and it is sent through your SMTP plugin if you use one. Backup files are never attached. Instead, an email can carry a secure download link: protected by a separate download password, expiring after 48 hours and 3 downloads by default, locked after 5 wrong passwords, HTTPS only, and revocable at any time.
+* **Storage Analytics:** see what uses your disk space: media, plugins, themes, WordPress core, the database, stored backups and other folders, with tabs for every plugin, theme, folder, database table and file type, and the largest files. A "worth reviewing" list estimates the space you could free, and each analysis shows what changed since the last one. Analysing never changes anything.
+* **Storage monitoring:** automatic analysis daily, weekly or monthly. BackupScope Pro watches the server disk and your hosting plan limit, and emails you once when usage reaches your warning or critical level, before uploads or backups start failing. An optional summary email lists the largest areas and the change since the previous analysis, and a Growth over time chart shows how the largest items grow.
+* **Media review:** find Media Library items with no detected reference anywhere, and files in uploads that are not in the Media Library. Post content, custom fields, page builder data (including Elementor), settings, widgets, every database table and theme files are checked. Preview each item, filter by type and extension, and mark items to keep.
+* **Safe cleanup:** review inactive plugins and themes, other backup plugins' archives, cache, temporary files and large log files. Everything you clean goes to a Cleanup Trash first and can be put back where it was for 30 days. Your active theme, its parent and one default theme are always kept, and large logs are emptied with a copy kept in the trash.
 
-[See BackupScope Pro features and plans](https://backupscope.pro/pricing)
+Pro also includes everything in the free plugin and works on its own: when you activate it, it replaces BackupScope Free and keeps your backups and settings. Updates install from your WordPress dashboard and come with email support from the developer. If you stop renewing, nothing is deleted or locked: your backups stay available to download and restore.
+
+Plans cover 2 sites, 5 sites or unlimited sites, with the same features in every plan. [See BackupScope Pro features and plans](https://backupscope.pro/pricing)
 
 == Frequently Asked Questions ==
 
 = Is BackupScope free? =
 
 Yes. BackupScope Free creates, verifies and lets you download full backups of your files and database. It has no time limit and needs no account.
+
+= What does BackupScope Pro add? =
+
+Scheduled backups, restore with a safety backup, off-site copies to S3-compatible storage, backup history and retention, email notifications with secure download links, Storage Analytics with automatic monitoring and alerts, Media review and Safe Cleanup. See "Why upgrade to BackupScope Pro?" above for details.
+
+= Do I need the free plugin to use Pro? =
+
+No. BackupScope Pro includes the same backup engine and works on its own. When you activate Pro, it switches the free plugin off and keeps your backups and settings, so you can delete the free plugin afterwards.
+
+= What happens if my Pro licence expires? =
+
+Nothing is deleted or locked. Your existing backups stay available to download and restore. Scheduled backups, off-site uploads, updates and support stop until you renew.
 
 = Does BackupScope back up the database? =
 
@@ -106,6 +123,12 @@ Stored backups are deleted too, because they contain sensitive data. Download yo
 Not in this version.
 
 == Changelog ==
+
+= 1.0.1 =
+* New: "Schedule & Restore (Pro)", "Upgrade" and "More Tools" pages, and a Backup coverage card on the backup screen.
+* New: review and upgrade links next to the page title and on the Plugins screen.
+* New: occasional tips after 3, 5 and 10 backups; each shows once on BackupScope screens and stays dismissed.
+* Developer: PHP namespace renamed from InstaBackup to BackupScope. Settings, stored backups and hooks are unchanged.
 
 = 1.0.0 =
 * Initial release.

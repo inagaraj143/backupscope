@@ -1,9 +1,9 @@
 <?php
-namespace InstaBackup\Jobs;
+namespace BackupScope\Jobs;
 
-use InstaBackup\Storage\StorageManager;
-use InstaBackup\Support\JsonFile;
-use InstaBackup\Support\Logger;
+use BackupScope\Storage\StorageManager;
+use BackupScope\Support\JsonFile;
+use BackupScope\Support\Logger;
 
 defined( 'ABSPATH' ) || exit;
 

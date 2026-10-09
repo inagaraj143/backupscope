@@ -65,6 +65,8 @@ if ( is_array( $instabackup_info ) && ! empty( $instabackup_info['path'] ) && is
 	}
 }
 
-foreach ( array( 'instabackup_settings', 'instabackup_storage', 'instabackup_lock', 'instabackup_scan_summary', 'instabackup_last_job', 'instabackup_cancel' ) as $instabackup_option ) {
+foreach ( array( 'instabackup_settings', 'instabackup_storage', 'instabackup_lock', 'instabackup_scan_summary', 'instabackup_last_job', 'instabackup_cancel', 'instabackup_successful_backups' ) as $instabackup_option ) {
 	delete_option( $instabackup_option );
 }
+// Which usage notices each user dismissed.
+delete_metadata( 'user', 0, 'instabackup_dismissed_notices', '', true );

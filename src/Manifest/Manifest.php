@@ -1,7 +1,7 @@
 <?php
-namespace InstaBackup\Manifest;
+namespace BackupScope\Manifest;
 
-use InstaBackup\Jobs\Job;
+use BackupScope\Jobs\Job;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -1,8 +1,8 @@
 <?php
-namespace InstaBackup\Storage;
+namespace BackupScope\Storage;
 
-use InstaBackup\Support\JsonFile;
-use InstaBackup\Support\Paths;
+use BackupScope\Support\JsonFile;
+use BackupScope\Support\Paths;
 
 defined( 'ABSPATH' ) || exit;
 

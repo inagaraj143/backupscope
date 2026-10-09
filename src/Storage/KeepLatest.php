@@ -1,5 +1,5 @@
 <?php
-namespace InstaBackup\Storage;
+namespace BackupScope\Storage;
 
 defined( 'ABSPATH' ) || exit;
 

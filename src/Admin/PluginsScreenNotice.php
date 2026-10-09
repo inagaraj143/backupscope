@@ -1,9 +1,9 @@
 <?php
-namespace InstaBackup\Admin;
+namespace BackupScope\Admin;
 
-use InstaBackup\Storage\BackupRepository;
-use InstaBackup\Storage\StorageManager;
-use InstaBackup\Support\Capability;
+use BackupScope\Storage\BackupRepository;
+use BackupScope\Storage\StorageManager;
+use BackupScope\Support\Capability;
 
 defined( 'ABSPATH' ) || exit;
 

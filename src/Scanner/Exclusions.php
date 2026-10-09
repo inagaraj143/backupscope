@@ -1,7 +1,7 @@
 <?php
-namespace InstaBackup\Scanner;
+namespace BackupScope\Scanner;
 
-use InstaBackup\Support\Paths;
+use BackupScope\Support\Paths;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -1,8 +1,8 @@
 <?php
-namespace InstaBackup\Jobs\Steps;
+namespace BackupScope\Jobs\Steps;
 
-use InstaBackup\Jobs\Job;
-use InstaBackup\Jobs\StepInterface;
+use BackupScope\Jobs\Job;
+use BackupScope\Jobs\StepInterface;
 
 defined( 'ABSPATH' ) || exit;
 

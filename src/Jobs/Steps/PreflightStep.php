@@ -1,10 +1,10 @@
 <?php
-namespace InstaBackup\Jobs\Steps;
+namespace BackupScope\Jobs\Steps;
 
-use InstaBackup\Database\Exporter;
-use InstaBackup\Jobs\Job;
-use InstaBackup\Jobs\StepInterface;
-use InstaBackup\Support\UserError;
+use BackupScope\Database\Exporter;
+use BackupScope\Jobs\Job;
+use BackupScope\Jobs\StepInterface;
+use BackupScope\Support\UserError;
 
 defined( 'ABSPATH' ) || exit;
 

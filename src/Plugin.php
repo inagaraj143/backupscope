@@ -1,11 +1,11 @@
 <?php
-namespace InstaBackup;
+namespace BackupScope;
 
-use InstaBackup\Admin\AdminPage;
-use InstaBackup\Admin\Ajax;
-use InstaBackup\Admin\PluginsScreenNotice;
-use InstaBackup\Http\DownloadHandler;
-use InstaBackup\Jobs\JobManager;
+use BackupScope\Admin\AdminPage;
+use BackupScope\Admin\Ajax;
+use BackupScope\Admin\PluginsScreenNotice;
+use BackupScope\Http\DownloadHandler;
+use BackupScope\Jobs\JobManager;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -25,6 +25,12 @@ final class Plugin {
 		( new Ajax() )->register();
 		( new DownloadHandler() )->register();
 		( new PluginsScreenNotice() )->register();
+
+		// Review and upgrade links, the Pro pages and More Tools: free plugin only. Inside
+		// BackupScope Pro the same engine runs without them.
+		if ( ! defined( 'INSTABACKUP_PRO_FILE' ) ) {
+			( new Admin\Promo() )->register();
+		}
 
 		/**
 		 * Fires after BackupScope has loaded. Pro hooks in here.

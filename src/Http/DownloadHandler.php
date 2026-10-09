@@ -1,10 +1,10 @@
 <?php
-namespace InstaBackup\Http;
+namespace BackupScope\Http;
 
-use InstaBackup\Jobs\Job;
-use InstaBackup\Storage\BackupRepository;
-use InstaBackup\Storage\StorageManager;
-use InstaBackup\Support\Capability;
+use BackupScope\Jobs\Job;
+use BackupScope\Storage\BackupRepository;
+use BackupScope\Storage\StorageManager;
+use BackupScope\Support\Capability;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -1,7 +1,7 @@
 <?php
-namespace InstaBackup\Database;
+namespace BackupScope\Database;
 
-use InstaBackup\Support\UserError;
+use BackupScope\Support\UserError;
 
 defined( 'ABSPATH' ) || exit;
 

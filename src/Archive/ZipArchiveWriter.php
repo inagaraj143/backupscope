@@ -1,5 +1,5 @@
 <?php
-namespace InstaBackup\Archive;
+namespace BackupScope\Archive;
 
 defined( 'ABSPATH' ) || exit;
 

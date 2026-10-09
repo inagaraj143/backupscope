@@ -1,21 +1,21 @@
 <?php
-namespace InstaBackup\Jobs;
+namespace BackupScope\Jobs;
 
-use InstaBackup\Database\Exporter;
-use InstaBackup\Jobs\Steps\ArchiveStep;
-use InstaBackup\Jobs\Steps\AwaitConfirmationStep;
-use InstaBackup\Jobs\Steps\CleanupStep;
-use InstaBackup\Jobs\Steps\DatabaseStep;
-use InstaBackup\Jobs\Steps\FinalizeStep;
-use InstaBackup\Jobs\Steps\PreflightStep;
-use InstaBackup\Jobs\Steps\ScanStep;
-use InstaBackup\Jobs\Steps\VerifyStep;
-use InstaBackup\Scanner\Areas;
-use InstaBackup\Storage\BackupRepository;
-use InstaBackup\Storage\StorageManager;
-use InstaBackup\Support\Logger;
-use InstaBackup\Support\Paths;
-use InstaBackup\Support\UserError;
+use BackupScope\Database\Exporter;
+use BackupScope\Jobs\Steps\ArchiveStep;
+use BackupScope\Jobs\Steps\AwaitConfirmationStep;
+use BackupScope\Jobs\Steps\CleanupStep;
+use BackupScope\Jobs\Steps\DatabaseStep;
+use BackupScope\Jobs\Steps\FinalizeStep;
+use BackupScope\Jobs\Steps\PreflightStep;
+use BackupScope\Jobs\Steps\ScanStep;
+use BackupScope\Jobs\Steps\VerifyStep;
+use BackupScope\Scanner\Areas;
+use BackupScope\Storage\BackupRepository;
+use BackupScope\Storage\StorageManager;
+use BackupScope\Support\Logger;
+use BackupScope\Support\Paths;
+use BackupScope\Support\UserError;
 
 defined( 'ABSPATH' ) || exit;
 

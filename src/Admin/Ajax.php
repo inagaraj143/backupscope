@@ -1,10 +1,10 @@
 <?php
-namespace InstaBackup\Admin;
+namespace BackupScope\Admin;
 
-use InstaBackup\Jobs\JobManager;
-use InstaBackup\Storage\ExposureTest;
-use InstaBackup\Support\Capability;
-use InstaBackup\Support\UserError;
+use BackupScope\Jobs\JobManager;
+use BackupScope\Storage\ExposureTest;
+use BackupScope\Support\Capability;
+use BackupScope\Support\UserError;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -66,7 +66,7 @@ final class Ajax {
 					break;
 
 				case 'dismiss':
-					$job = \InstaBackup\Jobs\Job::load( $manager->storage(), $job_id );
+					$job = \BackupScope\Jobs\Job::load( $manager->storage(), $job_id );
 					if ( $job && $job->is_terminal() ) {
 						$job->state['dismissed'] = true;
 						$job->save();
@@ -101,7 +101,7 @@ final class Ajax {
 	}
 
 	private function skipped( JobManager $manager, $job_id ) {
-		$job = \InstaBackup\Jobs\Job::load( $manager->storage(), $job_id );
+		$job = \BackupScope\Jobs\Job::load( $manager->storage(), $job_id );
 		if ( ! $job || ! is_file( $job->path( 'skipped.jsonl' ) ) ) {
 			return array();
 		}

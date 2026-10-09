@@ -1,7 +1,7 @@
 <?php
-namespace InstaBackup\Storage;
+namespace BackupScope\Storage;
 
-use InstaBackup\Support\Paths;
+use BackupScope\Support\Paths;
 
 defined( 'ABSPATH' ) || exit;
 
