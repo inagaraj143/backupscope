@@ -2,6 +2,7 @@
 namespace InstaBackup\Scanner;
 
 use InstaBackup\Support\Paths;
+use InstaBackup\Support\SecretFiles;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -174,6 +175,13 @@ final class Scanner {
 			if ( null !== $reason ) {
 				return;
 			}
+			// wp-config.php and other files with the security keys: shown under "Excluded
+			// automatically" so the user knows, and never put into the backup.
+			if ( 'analytics' !== $s['profile'] && SecretFiles::is_secret( $path, 'file' === $s['roots'][ $root_i ]['type'] || SecretFiles::is_root_level( $path ) ) ) {
+				$this->note_excluded( $s, $path, SecretFiles::REASON );
+				$this->grow_excluded_file( $s, $path );
+				return;
+			}
 		}
 		if ( ! is_readable( $path ) ) {
 			$this->skip( $s, $skip, $path, 'permission_denied' );
@@ -257,6 +265,17 @@ final class Scanner {
 		}
 		if ( count( $s['excluded'] ) < self::EXCLUDED_KEEP ) {
 			$s['excluded'][] = array( 'path' => $this->display( $path ), 'reason' => $reason, 'bytes' => null );
+		}
+	}
+
+	/** Size of a single excluded file (the list entry was just added for it). */
+	private function grow_excluded_file( array &$s, $path ) {
+		$display = $this->display( $path );
+		foreach ( $s['excluded'] as &$item ) {
+			if ( $item['path'] === $display ) {
+				$item['bytes'] = (int) @filesize( $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				return;
+			}
 		}
 	}
 

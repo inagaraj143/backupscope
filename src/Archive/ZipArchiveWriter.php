@@ -29,9 +29,7 @@ final class ZipArchiveWriter {
 		$count = 0;
 		foreach ( $entries as $entry ) {
 			list( $name, $path, $store ) = $entry;
-			// An entry with a fourth element is data held in memory (e.g. wp-config.php without its keys).
-			$added = isset( $entry[3] ) ? $zip->addFromString( $name, $entry[3] ) : $zip->addFile( $path, $name );
-			if ( ! $added ) {
+			if ( ! $zip->addFile( $path, $name ) ) {
 				continue;
 			}
 			$zip->setCompressionIndex( $zip->numFiles - 1, $store ? \ZipArchive::CM_STORE : \ZipArchive::CM_DEFLATE );

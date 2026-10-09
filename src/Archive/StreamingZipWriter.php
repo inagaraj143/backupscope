@@ -179,35 +179,6 @@ final class StreamingZipWriter {
 		return 'done';
 	}
 
-	/**
-	 * Writes a complete entry from data held in memory (used for files that are rewritten
-	 * before they are archived, such as wp-config.php without its keys). Nothing is written to
-	 * disk except the archive itself. Only for small data; there must be no current entry.
-	 */
-	public function add_string( $name, $data, $mtime, $store ) {
-		$method  = $store ? 0 : 8;
-		$hdr_off = ftell( $this->zip );
-		$out     = $store ? $data : gzdeflate( $data, 6 );
-		if ( false === $out ) {
-			throw new UserError( 'archive_write', esc_html__( 'BackupScope could not compress a file for the backup archive.', 'backupscope' ) );
-		}
-		$this->put( $this->zip, $this->local_header( $name, $method, $mtime, false ) );
-		$this->put( $this->zip, $out );
-		$c = array(
-			'name'    => $name,
-			'method'  => $method,
-			'zip64'   => false,
-			'hdr_off' => $hdr_off,
-			'size'    => strlen( $data ),
-			'csize'   => strlen( $out ),
-			'crc'     => (int) hexdec( hash( 'crc32b', $data ) ),
-			'mtime'   => (int) $mtime,
-		);
-		$this->patch_local_header( $c );
-		$this->put( $this->cd, $this->central_record( $c ) );
-		$this->s['entries']++;
-	}
-
 	/** Drops the current entry (truncates back to its local header). */
 	public function abort_current() {
 		if ( null === $this->s['cur'] ) {

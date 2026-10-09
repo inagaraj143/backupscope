@@ -319,6 +319,10 @@
 		}
 		var notes = '';
 		if ( s.disk.ok === false ) { notes += '<div class="notice notice-error inline"><p>' + esc( s.disk.message ) + '</p></div>'; }
+		var secrets = s.excluded.filter( function ( e ) { return e.reason === 'security_keys'; } );
+		if ( secrets.length ) {
+			notes += '<p class="ib-secure-note"><span aria-hidden="true">&#128274;</span> ' + fmt( t.secretNote, secrets.map( function ( e ) { return e.path; } ).join( ', ' ) ) + '</p>';
+		}
 		if ( state.showExcluded && s.excluded_count ) {
 			notes += '<ul class="ib-list">' + s.excluded.map( function ( e ) {
 				return '<li><code>' + esc( e.path ) + '</code> <span class="ib-muted">' + esc( t.reasons[ e.reason ] || e.reason ) + '</span></li>';

@@ -8,6 +8,7 @@ use InstaBackup\Jobs\Job;
 use InstaBackup\Jobs\StepInterface;
 use InstaBackup\Manifest\Manifest;
 use InstaBackup\Storage\StorageManager;
+use InstaBackup\Support\SecretFiles;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -124,6 +125,7 @@ final class ArchiveStep implements StepInterface {
 			'bytes_done'     => 0,
 			'bytes_total'    => $total,
 			'skipped'        => (int) $scan['skipped']['count'],
+			'secrets_excluded' => array(),
 			'extras'         => null,
 			'entries'        => 0,
 			'writer'         => null,
@@ -203,15 +205,10 @@ final class ArchiveStep implements StepInterface {
 				continue;
 			}
 			$st['bytes_done'] += (int) $row[3];
-			if ( self::is_config( $name ) ) {
-				// Archived from memory without its keys, or not at all. Never the original file.
-				$config = self::sanitized_config( $path );
-				if ( false === $config ) {
-					$this->record_skip( $job, $st, $name, self::CONFIG_SKIP );
-					continue;
-				}
-				$st['files_done']++;
-				yield array( $name, null, false, $config );
+			$secret = self::secret_reason( $name, $path );
+			if ( '' !== $secret ) {
+				// Never archived: wp-config.php and other files with the security keys.
+				$this->record_secret_exclusion( $job, $st, $name, $secret );
 				continue;
 			}
 			$st['files_done']++;
@@ -285,16 +282,11 @@ final class ArchiveStep implements StepInterface {
 					$st['bytes_done'] += (int) $row[3];
 					continue;
 				}
-				if ( self::is_config( $name ) ) {
-					// Archived from memory without its keys, or not at all. Never the original file.
+				$secret = self::secret_reason( $name, $path );
+				if ( '' !== $secret ) {
+					// Never archived: wp-config.php and other files with the security keys.
 					$st['bytes_done'] += (int) $row[3];
-					$config = self::sanitized_config( $path );
-					if ( false === $config ) {
-						$this->record_skip( $job, $st, $name, self::CONFIG_SKIP );
-						continue;
-					}
-					$writer->add_string( $name, $config, (int) @filemtime( $path ), false ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					$st['files_done']++;
+					$this->record_secret_exclusion( $job, $st, $name, $secret );
 					continue;
 				}
 				$size = (int) @filesize( $path ); // phpcs:ignore
@@ -343,62 +335,17 @@ final class ArchiveStep implements StepInterface {
 		return array( $root['archive'] . $row[2], $root['path'] . '/' . $row[2] );
 	}
 
-	// ---------------------------------------------------------------- wp-config.php
-
-	/** The eight authentication keys and salts defined in wp-config.php. */
-	const AUTH_SECRETS = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
-
-	/** WordPress's own placeholder value for keys and salts. */
-	const KEY_PLACEHOLDER = 'put your unique phrase here';
-
-	/** Skip reason recorded when a wp-config.php cannot be archived safely. */
-	const CONFIG_SKIP = 'config_not_sanitized';
-
-	/** Every file named wp-config.php (the site's, one above the root, or a nested copy). */
-	private static function is_config( $name ) {
-		return 'wp-config.php' === basename( $name );
-	}
+	// ---------------------------------------------------------------- files with security keys
 
 	/**
-	 * The contents of a wp-config.php with its authentication keys and salts replaced by
-	 * WordPress's placeholder, built in memory: nothing is written to disk, and the result goes
-	 * straight into the archive. Returns false when the file cannot be read, or when the result
-	 * cannot be shown to be free of key values (for example a key built from several strings or
-	 * declared with "const"). The caller then leaves wp-config.php out of the backup and records
-	 * why; the original file is never archived.
-	 *
-	 * A restored site still works: with the placeholder, WordPress falls back to random salts
-	 * stored in the database (wp_salt()), and existing logins end.
+	 * SecretFiles::REASON when the file must stay out of the backup (wp-config.php, or a
+	 * root-level PHP file that mentions a key name), otherwise ''. The scan already leaves these
+	 * out; this check makes sure nothing slips through. See Support\SecretFiles.
 	 */
-	public static function sanitized_config( $path ) {
-		$source = is_readable( $path ) ? file_get_contents( $path ) : false; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- read into memory, never copied.
-		if ( false === $source ) {
-			return false;
-		}
-		$names = implode( '|', self::AUTH_SECRETS );
-		$out   = preg_replace(
-			'/(define\s*\(\s*([\'"])(?:' . $names . ')\2\s*,\s*)([\'"])(?:\\\\.|(?!\3).)*\3/s',
-			'$1\'' . self::KEY_PLACEHOLDER . '\'',
-			$source
-		);
-		if ( null === $out ) {
-			return false;
-		}
-		// Prove it: every definition of a key must now be exactly the placeholder.
-		foreach ( self::AUTH_SECRETS as $secret ) {
-			if ( preg_match( '/\bconst\s+' . $secret . '\b/', $out ) ) {
-				return false;
-			}
-			if ( preg_match_all( '/define\s*\(\s*([\'"])' . $secret . '\1\s*,/', $out, $m, PREG_OFFSET_CAPTURE ) ) {
-				foreach ( $m[0] as $hit ) {
-					$rest = substr( $out, $hit[1] + strlen( $hit[0] ), 120 );
-					if ( ! preg_match( '/^\s*\'' . self::KEY_PLACEHOLDER . '\'\s*\)/', $rest ) ) {
-						return false;
-					}
-				}
-			}
-		}
-		return $out;
+	public static function secret_reason( $name, $path ) {
+		// Directly in the WordPress folder, or next to a wp-config.php that lives one level up.
+		$root_level = (bool) preg_match( '#^files/(wordpress|external/wp-config)/[^/]+$#', $name );
+		return SecretFiles::is_secret( $path, $root_level ) ? SecretFiles::REASON : '';
 	}
 
 	private function is_extra( $name ) {
@@ -439,6 +386,16 @@ final class ArchiveStep implements StepInterface {
 		$display = preg_replace( '#^files/(wordpress|external)/#', '', $name );
 		file_put_contents( $job->path( 'skipped.jsonl' ), wp_json_encode( array( 'path' => $display, 'reason' => $reason ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . "\n", FILE_APPEND ); // phpcs:ignore
 		$job->log->warning( 'Skipped file', array( 'path' => $display, 'reason' => $reason ) );
+	}
+
+	/**
+	 * A file left out on purpose because it holds the security keys. Listed in the manifest
+	 * (files.excluded), not as a skipped file: it is expected, so the backup has no warning.
+	 */
+	private function record_secret_exclusion( Job $job, array &$st, $name, $reason ) {
+		$display                             = preg_replace( '#^files/(wordpress|external)/#', '', $name );
+		$st['secrets_excluded'][ $display ] = $reason;
+		$job->log->info( 'Left out of the backup on purpose (security keys)', array( 'path' => $display ) );
 	}
 
 	/** After a fallback, keep only the skips recorded by the scan. */

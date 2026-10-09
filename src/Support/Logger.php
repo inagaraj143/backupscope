@@ -41,7 +41,9 @@ final class Logger {
 		foreach ( $roots as $i => $root ) {
 			$text = str_ireplace( array( $root, str_replace( '/', '\\', $root ) ), 0 === $i ? '[site]' : '[site-parent]', $text );
 		}
-		foreach ( array( 'DB_PASSWORD', 'DB_USER', 'DB_HOST', 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY' ) as $const ) {
+		// Database credentials only. Authentication keys and salts are never read by BackupScope,
+		// so they cannot appear in a log.
+		foreach ( array( 'DB_PASSWORD', 'DB_USER', 'DB_HOST' ) as $const ) {
 			if ( defined( $const ) && '' !== (string) constant( $const ) && strlen( (string) constant( $const ) ) > 3 ) {
 				$text = str_replace( (string) constant( $const ), '[redacted]', $text );
 			}

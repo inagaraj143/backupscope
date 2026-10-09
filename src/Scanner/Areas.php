@@ -59,7 +59,7 @@ final class Areas {
 
 	public static function hints() {
 		return array(
-			'core'          => 'wp-admin, wp-includes, wp-config.php',
+			'core'          => __( 'wp-admin, wp-includes, root files (never wp-config.php)', 'backupscope' ),
 			'plugins'       => 'wp-content/plugins, mu-plugins',
 			'themes'        => 'wp-content/themes',
 			'uploads'       => 'wp-content/uploads',

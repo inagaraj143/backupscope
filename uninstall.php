@@ -1,6 +1,6 @@
 <?php
 /**
- * Uninstall: backups contain wp-config.php and the full database, so they are removed with the
+ * Uninstall: backups contain the full database and site files, so they are removed with the
  * plugin (plan §28). Only BackupScope-named files inside the registered storage folder are
  * deleted. Define BACKUPSCOPE_KEEP_BACKUPS_ON_UNINSTALL as true to keep the archives.
  */

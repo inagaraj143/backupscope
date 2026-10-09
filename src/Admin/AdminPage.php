@@ -112,6 +112,8 @@ final class AdminPage {
 			'diskUnknown'      => __( 'Free space could not be checked on this server.', 'backupscope' ),
 			/* translators: %s: number of items */
 			'excluded'         => __( 'Excluded: %s items', 'backupscope' ),
+			/* translators: %s: file name(s), e.g. wp-config.php */
+			'secretNote'       => __( 'Not included, for security: %s. It holds your site’s security keys, so BackupScope never puts it in a backup. When you restore, keep your existing wp-config.php.', 'backupscope' ),
 			'view'             => __( 'view', 'backupscope' ),
 			/* translators: %s: folder path */
 			'nested'           => __( 'Other WordPress installation found: %s (excluded)', 'backupscope' ),
@@ -198,7 +200,6 @@ final class AdminPage {
 				'vanished'              => __( 'deleted during backup', 'backupscope' ),
 				'changed_during_backup' => __( 'changed during backup', 'backupscope' ),
 				'timeout'               => __( 'too slow to read on this server', 'backupscope' ),
-				'config_not_sanitized'  => __( 'left out: its security keys could not be removed safely', 'backupscope' ),
 				'backup_plugin'         => __( 'another backup plugin', 'backupscope' ),
 				'cache'                 => __( 'cache', 'backupscope' ),
 				'temporary'             => __( 'temporary files', 'backupscope' ),
@@ -207,6 +208,7 @@ final class AdminPage {
 				'instabackup'           => __( 'BackupScope storage', 'backupscope' ),
 				'custom'                => __( 'excluded by a filter', 'backupscope' ),
 				'server_files'          => __( 'server verification files', 'backupscope' ),
+				'security_keys'         => __( 'holds your security keys: never backed up', 'backupscope' ),
 			),
 		);
 	}

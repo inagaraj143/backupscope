@@ -29,6 +29,13 @@ final class Manifest {
 		foreach ( (array) ( isset( $scan['excluded'] ) ? $scan['excluded'] : array() ) as $item ) {
 			$excluded[] = array( 'path' => $item['path'], 'reason' => $item['reason'] );
 		}
+		// wp-config.php and other files with the security keys: never in a backup.
+		$listed = wp_list_pluck( $excluded, 'path' );
+		foreach ( (array) ( isset( $archive['secrets_excluded'] ) ? $archive['secrets_excluded'] : array() ) as $path => $reason ) {
+			if ( ! in_array( (string) $path, $listed, true ) ) { // Usually already listed by the scan.
+				$excluded[] = array( 'path' => (string) $path, 'reason' => $reason );
+			}
+		}
 
 		return array(
 			'format'         => self::FORMAT,
