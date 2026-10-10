@@ -4,7 +4,7 @@ Tags: backup, database backup, website backup, full backup, files backup
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,10 @@ Stored backups are deleted too, because they contain sensitive data. Download yo
 Not in this version.
 
 == Changelog ==
+
+= 1.0.2 =
+* New: BackupScope Storage Insights on the More Tools page. It is a free, read-only plugin from WordPress.org that shows what uses your disk space, and installs through WordPress's own installer.
+* Improved: the More Tools cards sit in one row on wide screens.
 
 = 1.0.1 =
 * New: "Schedule & Restore (Pro)", "Upgrade" and "More Tools" pages, and a Backup coverage card on the backup screen.

@@ -3,7 +3,7 @@
  * Plugin Name:       BackupScope
  * Plugin URI:        https://backupscope.pro
  * Description:       Back up your WordPress files and database to a private, downloadable ZIP. Scan first, see the size, download when it's done.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Requires at least: 6.2
  * Requires PHP:      7.4
  * Author:            Nagaraj
@@ -32,7 +32,7 @@ if ( defined( 'INSTABACKUP_FILE' ) ) {
 	}
 } )();
 
-define( 'INSTABACKUP_VERSION', '1.0.1' );
+define( 'INSTABACKUP_VERSION', '1.0.2' );
 define( 'INSTABACKUP_FILE', __FILE__ );
 define( 'INSTABACKUP_DIR', __DIR__ . '/' );
 define( 'INSTABACKUP_ENGINE_API', 2 );

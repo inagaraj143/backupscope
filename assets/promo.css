@@ -58,3 +58,9 @@
 .bsp-card h2 .bsp-badge { margin-left: 4px; vertical-align: 2px; }
 .bsp-badge--free { background: #00a32a; }
 .bsp-tool-pro--free { border-left-color: #00a32a; }
+
+/* More Tools: four cards in one row on a wide screen, using the full width. */
+.bsp-wrap.bsp-wrap--wide { max-width: none; }
+.bsp-tools-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1280px) { .bsp-tools-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .bsp-tools-grid { grid-template-columns: 1fr; } }

@@ -11,11 +11,11 @@ defined( 'ABSPATH' ) || exit;
  */
 final class ProPages {
 
-	private static function open( $title, $placement ) {
+	private static function open( $title, $placement, $class = '' ) {
 		if ( ! Capability::check() ) {
 			wp_die( esc_html__( 'You are not allowed to manage backups.', 'backupscope' ) );
 		}
-		echo '<div class="wrap bsp-wrap"><div class="bsp-title-row"><h1>' . esc_html( $title ) . '</h1>';
+		echo '<div class="wrap bsp-wrap' . ( '' !== $class ? ' ' . esc_attr( $class ) : '' ) . '"><div class="bsp-title-row"><h1>' . esc_html( $title ) . '</h1>';
 		Promo::title_actions( $placement );
 		echo '</div>';
 	}
@@ -226,6 +226,17 @@ final class ProPages {
 				'icon'  => 'dashicons-shield',
 			),
 			array(
+				'name'  => 'BackupScope Storage Insights',
+				'text'  => __( 'See what uses your WordPress disk space.', 'backupscope' ),
+				'pro'   => __( 'Media, plugins, themes, folders, database tables and the largest files, measured and shown in one report. Read-only: nothing on your site is changed or deleted.', 'backupscope' ),
+				'free'  => true,
+				'slug'  => 'backupscope-storage-insights',
+				'files' => array( 'backupscope-storage-insights/backupscope-storage-insights.php' ),
+				'url'   => 'https://wordpress.org/plugins/backupscope-storage-insights/',
+				'wporg' => true,
+				'icon'  => 'dashicons-chart-pie',
+			),
+			array(
 				'name'  => 'DocxToWP',
 				'text'  => __( 'Word and Markdown files into WordPress, without copy-paste.', 'backupscope' ),
 				'pro'   => __( 'Real, editable blocks with headings, lists, tables and formatting kept; images added to the Media Library; a live preview; publish to posts, pages or any custom post type.', 'backupscope' ),
@@ -246,18 +257,17 @@ final class ProPages {
 				'wporg' => false,
 				'icon'  => 'dashicons-media-document',
 			),
-			// BackupScope Storage Insights joins this list once it is live on WordPress.org.
 		);
 	}
 
 	public static function more_tools() {
-		self::open( __( 'More Tools', 'backupscope' ), 'tools-header' );
+		self::open( __( 'More Tools', 'backupscope' ), 'tools-header', 'bsp-wrap--wide' );
 		echo '<p class="bsp-intro-text">' . esc_html__( 'Other WordPress plugins from the makers of BackupScope.', 'backupscope' ) . '</p>';
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 		$installed = get_plugins();
-		echo '<div class="bsp-cards">';
+		echo '<div class="bsp-cards bsp-tools-grid">';
 		foreach ( self::products() as $p ) {
 			$file = '';
 			foreach ( $p['files'] as $f ) {
